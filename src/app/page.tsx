@@ -1,9 +1,38 @@
-import Image from "next/image";
+"use client";
+
+import { FormPersonal } from "@/components/Forms/Personal";
+import { FormProfessional } from "@/components/Forms/Professional";
+import { Resume } from "@/components/ViewPDF";
+import { useEffect, useState } from "react";
+import { useFormStore } from "@/app/store/form";
 
 export default function Home() {
+  const [loaded, setLoaded] = useState(false);
+  const { personal, professional } = useFormStore((state) => state);
+
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
+
+  if (!loaded) return <div className="p-3">Carregando...</div>;
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+    <div className="w-full min-h-screen flex space-x-4">
+      <div className="w-1/2 h-screen space-y-8 p-8 overflow-auto">
+        <div className="space-y-3">
+          <h2 className="text-xl font-bold">Informações Pessoais</h2>
+          <FormPersonal />
+        </div>
+        <FormProfessional />
+      </div>
+      <div className="w-full min-h-screen h-screen flex">
+        {loaded && (
+          <div style={{ flexGrow: 1 }}>
+            <Resume personal={personal} professional={professional} />
+          </div>
+        )}
+      </div>
+      {/* <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <Image
           className="dark:invert"
           src="https://nextjs.org/icons/next.svg"
@@ -95,7 +124,7 @@ export default function Home() {
           />
           Go to nextjs.org →
         </a>
-      </footer>
+      </footer> */}
     </div>
   );
 }
