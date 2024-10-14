@@ -19,6 +19,7 @@ interface ResumeProps {
 }
 
 export function Resume({ personal, professional }: ResumeProps) {
+  console.log(professional);
   return (
     <>
       <PDFViewer
@@ -41,19 +42,37 @@ export function Resume({ personal, professional }: ResumeProps) {
               <View style={styles.container_professional}>
                 <View style={styles.section_left}>
                   <View style={styles.content}>
-                    <Text>Experiência Profissional</Text>
-                    <Text style={styles.text}>
-                      {professional.profExperience}
-                    </Text>
+                    <View style={styles.content_exp_edu}>
+                      <Text>Experiência Profissional</Text>
+                      {professional.experience.map((item, idx) => (
+                        <View key={idx} style={styles.experience}>
+                          <Text style={styles.textsubTitle}>{item.title}</Text>
+                          <Text style={styles.textDate}>
+                            {item.startDate} - {item.endDate}
+                          </Text>
+                          <Text style={styles.text}>{item.description}</Text>
+                        </View>
+                      ))}
+                    </View>
                   </View>
                   <View style={styles.content}>
                     <Text>Educação</Text>
-                    <Text style={styles.text}>{professional.education}</Text>
+                    {professional.education.map((item, idx) => (
+                      <View key={idx} style={styles.experience}>
+                        <Text style={styles.textsubTitle}>{item.title}</Text>
+                        <Text style={styles.textDate}>
+                          {item?.startDate} - {item.endDate}
+                        </Text>
+                        <Text style={styles.text}>{item.description}</Text>
+                      </View>
+                    ))}
                   </View>
-                  <View style={styles.content}>
-                    <Text>Projetos</Text>
-                    <Text style={styles.text}>{professional.projects}</Text>
-                  </View>
+                  {professional.projects && (
+                    <View style={styles.content}>
+                      <Text>Projetos</Text>
+                      <Text style={styles.text}>{professional.projects}</Text>
+                    </View>
+                  )}
                   {professional.addInfo && (
                     <View style={styles.content}>
                       <Text>Outras Informações</Text>

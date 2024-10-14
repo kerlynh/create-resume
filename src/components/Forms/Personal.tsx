@@ -2,6 +2,7 @@
 
 import { useFormStore } from "@/app/store/form";
 import { InpulField } from "./Input";
+import { SelectField } from "./Select";
 
 export function FormPersonal() {
   const { personal, setPersonal } = useFormStore((state) => state);
@@ -34,7 +35,7 @@ export function FormPersonal() {
         type="text"
         setValue={(e) => setPersonal({ ...personal, address: e })}
       />
-      <div className="flex w-full space-x-3">
+      <div className="flex w-full space-x-3 items-center">
         <InpulField
           id="city"
           label="Cidade"
@@ -42,13 +43,7 @@ export function FormPersonal() {
           type="text"
           setValue={(e) => setPersonal({ ...personal, city: e })}
         />
-        <InpulField
-          id="state"
-          label="Estado"
-          name="state"
-          type="text"
-          setValue={(e) => setPersonal({ ...personal, state: e })}
-        />
+        <SelectField />
       </div>
       <InpulField
         id="phone"

@@ -1,9 +1,11 @@
 "use client";
 
 import { useFormStore } from "@/app/store/form";
-import { TextAreaField } from "./textArea";
+import { TextAreaField } from "./TextArea";
 import { useEffect, useState } from "react";
 import { CircleButton } from "./Button/Circle";
+import { Experience } from "@/app/store/experience";
+import { Education } from "@/app/store/education";
 
 export function FormProfessional() {
   const { professional, setProfessional } = useFormStore((state) => state);
@@ -21,7 +23,7 @@ export function FormProfessional() {
 
     newlist.push(
       <TextAreaField
-        key={count}
+        key={`experinece-${experienceList.length}`}
         id={`experience-${count}`}
         name="experience"
         label={"Experiência Profissional"}
@@ -30,14 +32,29 @@ export function FormProfessional() {
         moreInfo
         maxlength={400}
         limited
-        setValue={(e) =>
-          setProfessional({ ...professional, profExperience: e })
-        }
+        category="experience"
+        setValue={(e) => {
+          if (
+            typeof e !== "string" &&
+            e.description &&
+            e.category === "experience"
+          ) {
+            const updatedExperience = [
+              ...professional.experience,
+              e,
+            ] as Experience[];
+
+            setProfessional({
+              ...professional,
+              experience: updatedExperience,
+            });
+          }
+        }}
       />
     );
     setExperienceList(newlist);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [count]);
+  }, [count, professional.experience]);
 
   function addEducation() {
     setCountEducation((prev: number) => (prev += 1));
@@ -48,7 +65,7 @@ export function FormProfessional() {
 
     newlist.push(
       <TextAreaField
-        key={countEducation}
+        key={`education-${educationList.length}`}
         id={`education-${countEducation}`}
         name="education"
         label={"Educação"}
@@ -57,12 +74,29 @@ export function FormProfessional() {
         moreInfo
         maxlength={400}
         limited
-        setValue={(e) => setProfessional({ ...professional, education: e })}
+        category="education"
+        setValue={(e) => {
+          if (
+            typeof e !== "string" &&
+            e.description &&
+            e.category === "education"
+          ) {
+            const updatedEducation = [
+              ...(professional.education || []),
+              e,
+            ] as Education[];
+
+            setProfessional({
+              ...professional,
+              education: updatedEducation,
+            });
+          }
+        }}
       />
     );
     setEducationList(newlist);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [countEducation]);
+  }, [countEducation, professional.education]);
 
   return (
     <form className="space-y-8 ">
@@ -74,15 +108,11 @@ export function FormProfessional() {
         rows={5}
         maxlength={400}
         limited
-        setValue={(e) => setProfessional({ ...professional, profSummary: e })}
+        setValue={(e) => {
+          if (typeof e === "string")
+            setProfessional({ ...professional, profSummary: e });
+        }}
       />
-      <div className="space-y-3">
-        <div className="w-full h-auto flex items-center space-x-5">
-          <h4 className="text-xl font-bold">Experiência Profissional</h4>
-          <CircleButton onClick={() => addExperience()} />
-        </div>
-        {...experienceList}
-      </div>
       <TextAreaField
         id="techSkills"
         name="techSkills"
@@ -91,10 +121,19 @@ export function FormProfessional() {
         rows={5}
         maxlength={400}
         limited
-        setValue={(e) =>
-          setProfessional({ ...professional, technicalSkills: e })
-        }
+        setValue={(e) => {
+          if (typeof e === "string")
+            setProfessional({ ...professional, technicalSkills: e });
+        }}
       />
+      <div className="space-y-3">
+        <div className="w-full h-auto flex items-center space-x-5">
+          <h4 className="text-xl font-bold">Experiência Profissional</h4>
+          <CircleButton onClick={() => addExperience()} />
+        </div>
+        {...experienceList}
+      </div>
+
       <div className="space-y-3">
         <div className="w-full h-auto flex items-center space-x-5">
           <h4 className="text-xl font-bold">Educação</h4>
@@ -110,7 +149,10 @@ export function FormProfessional() {
         rows={5}
         maxlength={400}
         limited
-        setValue={(e) => setProfessional({ ...professional, projects: e })}
+        setValue={(e) => {
+          if (typeof e === "string")
+            setProfessional({ ...professional, projects: e });
+        }}
       />
       <TextAreaField
         id="addInfo"
@@ -120,7 +162,10 @@ export function FormProfessional() {
         rows={5}
         maxlength={400}
         limited
-        setValue={(e) => setProfessional({ ...professional, addInfo: e })}
+        setValue={(e) => {
+          if (typeof e === "string")
+            setProfessional({ ...professional, addInfo: e });
+        }}
       />
     </form>
   );

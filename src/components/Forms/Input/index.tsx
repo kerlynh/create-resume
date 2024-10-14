@@ -28,6 +28,10 @@ export function InpulField({
   }
 
   useEffect(() => {
+    if (disabled) setInputValue("");
+  }, [disabled]);
+
+  useEffect(() => {
     const delayInputTimeoutId = setTimeout(() => {
       setValue(inputValue);
     }, 1000);
@@ -39,7 +43,11 @@ export function InpulField({
   return (
     <div className="w-full h-auto space-y-1">
       <label htmlFor={id}>{label}</label>
-      <div className="w-hull h-10 rounded-lg border border-black flex items-center justify-center overflow-auto py-2 px-3">
+      <div
+        className={`w-hull h-10 rounded-lg border border-black flex items-center justify-center overflow-auto py-2 px-3 ${
+          disabled && "bg-gray-200"
+        }`}
+      >
         <input
           type={type}
           name={name}

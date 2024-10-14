@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
   },
   section_left: {
     width: "65%",
-    height: "67",
+    height: "67%",
     paddingLeft: "16px",
     gap: "12px",
   },
@@ -55,7 +55,7 @@ export const styles = StyleSheet.create({
   content: {
     display: "flex",
     flexDirection: "column",
-    gap: "6px",
+    gap: "12px",
     width: "100%",
     height: "auto",
   },
@@ -88,5 +88,27 @@ export const styles = StyleSheet.create({
   },
   textArea: {
     lineHeight: "1.5px",
+  },
+  content_exp_edu: {
+    width: "100%",
+    height: "auto",
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+  },
+  experience: {
+    width: "100%",
+    height: "auto",
+    display: "flex",
+    flexDirection: "column",
+    gap: "6px",
+  },
+  textsubTitle: {
+    fontSize: "14px",
+    fontWeight: "extrabold",
+  },
+  textDate: {
+    fontSize: "11px",
+    color: "#808080",
   },
 });

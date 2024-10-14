@@ -1,4 +1,6 @@
 import { create } from "zustand";
+import { Experience } from "./experience";
+import { Education } from "./education";
 
 export type Personal = {
   fullname: string;
@@ -13,13 +15,9 @@ export type Personal = {
 
 export type Professional = {
   profSummary: string;
-  profExperience: string;
-  profExperienceJob: string;
-  profExperienceDate: string;
+  experience: Experience[];
+  education: Education[];
   technicalSkills: string;
-  education: string;
-  educationDate: string;
-  educationGraduation: string;
   projects: string;
   addInfo: string;
 };
@@ -28,7 +26,7 @@ interface FormState {
   personal: Personal;
   professional: Professional;
   setPersonal: (personal: Personal) => void;
-  setProfessional: (professional: Professional) => void;
+  setProfessional: (update: Partial<Professional> | any) => void; // Uso de Partial
 }
 
 export const useFormStore = create<FormState>((set) => ({
@@ -43,15 +41,10 @@ export const useFormStore = create<FormState>((set) => ({
     linkedin: "xxxxxxx-xxxxxx",
   },
   professional: {
-    profSummary:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eleifend fermentum placerat. Aliquam auctor massa elit, feugiat lobortis libero cursus quis. Cras ullamcorper cursus ex eu pellentesque. Nunc blandit eu nibh et tempor. Ut sagittis, nisi quis blandit vulputate, orci mauris tristique dolor, quis fringilla nulla lectus ut ligula. In aliquet turpis magna, id auctor tellus egestas nec. csd",
-    profExperience: "",
-    profExperienceDate: "",
-    profExperienceJob: "",
+    profSummary: "Lorem ipsum dolor sit amet...",
+    experience: [],
+    education: [],
     technicalSkills: "lalala\nlalala\nlalala",
-    education: "",
-    educationDate: "",
-    educationGraduation: "",
     projects: "",
     addInfo: "",
   },
@@ -59,8 +52,11 @@ export const useFormStore = create<FormState>((set) => ({
     set((state) => ({
       personal: { ...state.personal, ...newPersonal },
     })),
-  setProfessional: (newProfessional: Professional) =>
+  setProfessional: (update: Partial<Professional>) =>
     set((state) => ({
-      professional: { ...state.professional, ...newProfessional },
+      professional: {
+        ...state.professional,
+        ...update,
+      },
     })),
 }));

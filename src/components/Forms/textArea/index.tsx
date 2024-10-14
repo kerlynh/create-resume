@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { InpulField } from "../Input";
+import { Checkbox } from "../Checkbox";
+import { Experience } from "@/app/store/experience";
+import { Education } from "@/app/store/education";
 
 interface TextAreaFieldProps {
   name: string;
@@ -10,7 +13,8 @@ interface TextAreaFieldProps {
   maxlength?: number;
   moreInfo?: boolean;
   limited?: boolean;
-  setValue: (v: string) => void;
+  category?: "experience" | "education";
+  setValue: (v: string | Experience | Education) => void;
 }
 
 export function TextAreaField({
@@ -22,43 +26,87 @@ export function TextAreaField({
   maxlength,
   moreInfo,
   limited,
+  category,
   setValue,
 }: TextAreaFieldProps) {
   const [textAreaValue, setTextAreaValue] = useState("");
+  const [info, setInfo] = useState<Experience | Education>({
+    title: "",
+    description: "",
+    startDate: "",
+    endDate: "",
+    category: category!,
+    isCurrent: false,
+    id: Date.now(),
+  });
 
-  function onChange(e: React.ChangeEvent<HTMLTextAreaElement> | string) {
-    if (typeof e === "string") setTextAreaValue(e);
-    else setTextAreaValue(e.target.value);
+  function onChange(
+    e: React.ChangeEvent<HTMLTextAreaElement> | string | boolean,
+    type: string
+  ) {
+    if (moreInfo) {
+      if (type === "isCurrent") {
+        console.log("current", e);
+        setInfo((prev: any) => {
+          return {
+            ...prev,
+            isCurrent: e,
+            endDate: e === true && "até o momento",
+          };
+        });
+      } else setInfo((prev: any) => ({ ...prev, [type]: e }));
+    }
+    if (typeof e === "string" && type === "description") {
+      setTextAreaValue(e);
+    }
   }
 
   useEffect(() => {
     const delayInputTimeoutId = setTimeout(() => {
-      setValue(textAreaValue);
+      const value = moreInfo ? info : textAreaValue;
+      setValue(value);
     }, 1000);
 
     return () => clearTimeout(delayInputTimeoutId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [textAreaValue]);
+  }, [textAreaValue, moreInfo, info]);
 
   return (
     <div className="space-y-3">
       {moreInfo ? (
-        <div className="flex w-full h-auto space-x-3">
+        <>
           <InpulField
-            label="Data Inicial"
-            name={`date-${label}-1`}
-            id={`date-${label}-1`}
+            label="Nome"
+            name="company"
+            id="company"
             type="text"
-            setValue={(e) => onChange(e)}
+            setValue={(e) => onChange(e, "title")}
           />
-          <InpulField
-            label="Data final"
-            name={`date-${label}-2`}
-            id={`date-${label}-2`}
-            type="text"
-            setValue={(e) => onChange(e)}
-          />
-        </div>
+          <div className="flex w-full h-auto space-x-3">
+            <InpulField
+              label="Data Inicial"
+              name={`date-${label}-1`}
+              id={`date-${label}-1`}
+              type="text"
+              setValue={(e) => onChange(e, "startDate")}
+            />
+            <InpulField
+              label="Data final"
+              name={`date-${label}-2`}
+              id={`date-${label}-2`}
+              type="text"
+              disabled={info.isCurrent}
+              setValue={(e) => onChange(e, "endDate")}
+            />
+          </div>
+          <div className="w-full h-auto flex justify-end">
+            <Checkbox
+              label="Atualmente"
+              value={info.isCurrent}
+              onChange={(e) => onChange(e, "isCurrent")}
+            />
+          </div>
+        </>
       ) : (
         <div className="w-full h-auto flex items-center space-x-5">
           <h4 className="text-xl font-bold">{label}</h4>
@@ -78,7 +126,7 @@ export function TextAreaField({
           maxLength={maxlength}
           className="w-full h-full resize-none outline-none"
           value={textAreaValue}
-          onChange={(e) => onChange(e)}
+          onChange={(e) => onChange(e.target.value, "description")}
         ></textarea>
       </div>
       {limited && (
