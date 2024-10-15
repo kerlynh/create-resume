@@ -8,6 +8,7 @@ export type Experience = {
   isCurrent: boolean;
   category: string;
   id: number;
+  position: string;
 };
 
 // interface ExperienceState {

@@ -8,23 +8,24 @@ export type Education = {
   isCurrent: boolean;
   category: string;
   id: number;
+  position: string;
 };
 
-interface EducationState {
-  education: Education[];
-  setEducation: (education: Education[]) => void;
-}
+// interface EducationState {
+//   education: Education[];
+//   setEducation: (education: Education[]) => void;
+// }
 
-export const useEducationStore = create<EducationState>((set) => ({
-  education: {
-    title: "",
-    description: "",
-    startDate: "",
-    endDate: "",
-    isCurrent: false,
-  },
-  setEducation: (newEducation: Education[]) =>
-    set((state) => ({
-      education: { ...state.education, ...newEducation },
-    })),
-}));
+// export const useEducationStore = create<EducationState>((set) => ({
+//   education: {
+//     title: "",
+//     description: "",
+//     startDate: "",
+//     endDate: "",
+//     isCurrent: false,
+//   },
+//   setEducation: (newEducation: Education[]) =>
+//     set((state) => ({
+//       education: { ...state.education, ...newEducation },
+//     })),
+// }));

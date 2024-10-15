@@ -3,7 +3,7 @@ import { useStateBrStore } from "@/app/store/stateBr";
 import { useEffect, useState } from "react";
 
 export function SelectField() {
-  const { aliasState, isLoading, error, getAliasState } = useStateBrStore(
+  const { aliasState, isLoading, getAliasState } = useStateBrStore(
     (state) => state
   );
   const [stateBr, setSateBr] = useState("UF");
@@ -25,7 +25,7 @@ export function SelectField() {
       <div className="w-hull h-10 rounded-lg border border-black flex items-center justify-center overflow-auto py-2 px-3">
         <select
           id="select"
-          className={`w-full h-full outline-non`}
+          className={`w-full h-full outline-none`}
           value={stateBr}
           disabled={isLoading}
           onChange={(e) => {

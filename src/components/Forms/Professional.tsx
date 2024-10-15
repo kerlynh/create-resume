@@ -6,97 +6,33 @@ import { useEffect, useState } from "react";
 import { CircleButton } from "./Button/Circle";
 import { Experience } from "@/app/store/experience";
 import { Education } from "@/app/store/education";
+import { TextAreaInputField } from "./TextAreaInput";
 
 export function FormProfessional() {
   const { professional, setProfessional } = useFormStore((state) => state);
   const [count, setCount] = useState(0);
-  const [experienceList, setExperienceList] = useState<React.JSX.Element[]>([]);
+  const [experienceList, setExperienceList] = useState<number[]>([]);
   const [countEducation, setCountEducation] = useState(0);
-  const [educationList, setEducationList] = useState<React.JSX.Element[]>([]);
+  const [educationList, setEducationList] = useState<number[]>([]);
 
   function addExperience() {
     setCount((prev: number) => (prev += 1));
   }
-
   useEffect(() => {
-    const newlist = [...experienceList];
-
-    newlist.push(
-      <TextAreaField
-        key={`experinece-${experienceList.length}`}
-        id={`experience-${count}`}
-        name="experience"
-        label={"Experiência Profissional"}
-        cols={5}
-        rows={5}
-        moreInfo
-        maxlength={400}
-        limited
-        category="experience"
-        setValue={(e) => {
-          if (
-            typeof e !== "string" &&
-            e.description &&
-            e.category === "experience"
-          ) {
-            const updatedExperience = [
-              ...professional.experience,
-              e,
-            ] as Experience[];
-
-            setProfessional({
-              ...professional,
-              experience: updatedExperience,
-            });
-          }
-        }}
-      />
-    );
-    setExperienceList(newlist);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [count, professional.experience]);
+    const data = Array.from(Array(count).keys());
+    console.log(data);
+    setExperienceList(data);
+  }, [count]);
 
   function addEducation() {
     setCountEducation((prev: number) => (prev += 1));
   }
 
   useEffect(() => {
-    const newlist = [...educationList];
-
-    newlist.push(
-      <TextAreaField
-        key={`education-${educationList.length}`}
-        id={`education-${countEducation}`}
-        name="education"
-        label={"Educação"}
-        cols={5}
-        rows={5}
-        moreInfo
-        maxlength={400}
-        limited
-        category="education"
-        setValue={(e) => {
-          if (
-            typeof e !== "string" &&
-            e.description &&
-            e.category === "education"
-          ) {
-            const updatedEducation = [
-              ...(professional.education || []),
-              e,
-            ] as Education[];
-
-            setProfessional({
-              ...professional,
-              education: updatedEducation,
-            });
-          }
-        }}
-      />
-    );
-    setEducationList(newlist);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [countEducation, professional.education]);
+    const data = Array.from(Array(countEducation).keys());
+    console.log(data);
+    setEducationList(data);
+  }, [countEducation]);
 
   return (
     <form className="space-y-8 ">
@@ -109,8 +45,7 @@ export function FormProfessional() {
         maxlength={400}
         limited
         setValue={(e) => {
-          if (typeof e === "string")
-            setProfessional({ ...professional, profSummary: e });
+          setProfessional({ ...professional, profSummary: e });
         }}
       />
       <TextAreaField
@@ -122,51 +57,100 @@ export function FormProfessional() {
         maxlength={400}
         limited
         setValue={(e) => {
-          if (typeof e === "string")
-            setProfessional({ ...professional, technicalSkills: e });
+          setProfessional({ ...professional, technicalSkills: e });
         }}
       />
       <div className="space-y-3">
         <div className="w-full h-auto flex items-center space-x-5">
           <h4 className="text-xl font-bold">Experiência Profissional</h4>
-          <CircleButton onClick={() => addExperience()} />
+          <CircleButton onClick={addExperience} />
         </div>
-        {...experienceList}
+        {experienceList.map((idx) => (
+          <TextAreaInputField
+            key={`experinece-${idx}`}
+            id={idx}
+            name="experience"
+            label={"Experiência Profissional"}
+            cols={5}
+            rows={5}
+            maxlength={400}
+            limited
+            category="experience"
+            setValue={(e) => {
+              const idExists = professional.experience?.some(
+                (item) => item.id === e.id
+              );
+
+              if (idExists) {
+                const updatedExperience = professional.experience.map((item) =>
+                  item.id === e.id ? e : item
+                );
+
+                setProfessional({
+                  ...professional,
+                  experience: updatedExperience,
+                });
+              } else {
+                const updatedExperience = [
+                  ...(professional.experience || []),
+                  e,
+                ] as Experience[];
+
+                setProfessional({
+                  ...professional,
+                  experience: updatedExperience,
+                });
+              }
+            }}
+          />
+        ))}
       </div>
 
       <div className="space-y-3">
         <div className="w-full h-auto flex items-center space-x-5">
           <h4 className="text-xl font-bold">Educação</h4>
-          <CircleButton onClick={() => addEducation()} />
+          <CircleButton onClick={addEducation} />
         </div>
-        {...educationList}
+        {educationList.map((idx) => (
+          <TextAreaInputField
+            key={`education-${idx}`}
+            id={idx}
+            name="education"
+            label={"Educação"}
+            cols={5}
+            rows={5}
+            maxlength={400}
+            limited
+            category="education"
+            setValue={(e) => {
+              const idExists = professional.education?.some(
+                (item) => item.id === e.id
+              );
+
+              if (idExists) {
+                const updatedEducation = professional.education.map((item) =>
+                  item.id === e.id ? e : item
+                );
+
+                setProfessional({
+                  ...professional,
+                  education: updatedEducation,
+                });
+              } else {
+                const updatedEducation = [
+                  ...(professional.education || []),
+                  e,
+                ] as Education[];
+
+                setProfessional({
+                  ...professional,
+                  education: updatedEducation,
+                });
+              }
+            }}
+          />
+        ))}
       </div>
-      <TextAreaField
-        id="projects"
-        name="projects"
-        label={"Projetos (Opcional)"}
-        cols={5}
-        rows={5}
-        maxlength={400}
-        limited
-        setValue={(e) => {
-          if (typeof e === "string")
-            setProfessional({ ...professional, projects: e });
-        }}
-      />
-      <TextAreaField
-        id="addInfo"
-        name="addInfo"
-        label={"Outras Informações (Opcional)"}
-        cols={5}
-        rows={5}
-        maxlength={400}
-        limited
-        setValue={(e) => {
-          if (typeof e === "string")
-            setProfessional({ ...professional, addInfo: e });
-        }}
-      />
     </form>
   );
 }

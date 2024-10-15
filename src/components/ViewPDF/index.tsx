@@ -47,6 +47,9 @@ export function Resume({ personal, professional }: ResumeProps) {
                       {professional.experience.map((item, idx) => (
                         <View key={idx} style={styles.experience}>
                           <Text style={styles.textsubTitle}>{item.title}</Text>
+                          <Text style={styles.textsubTitle}>
+                            {item.position}
+                          </Text>
                           <Text style={styles.textDate}>
                             {item.startDate} - {item.endDate}
                           </Text>
